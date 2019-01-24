@@ -63,13 +63,6 @@ app.delete('/todos/:id', (req, res) => {
     }).catch((e) => {
         res.status(400).send();
     });
-    //if not valid id return 404
-    //remove todoby id
-        //success
-            //if no doc, send 404
-            //if doc send it back with 200
-        //error
-         //404 with empty bidy
 });
 
 app.patch('/todos/:id', (req, res) => {
@@ -92,6 +85,22 @@ app.patch('/todos/:id', (req, res) => {
     }).catch((e) => {
         res.status(400).send();
     });
+});
+
+//POST /users 
+
+app.post('/users', (req, res) => {
+    var body = _.pick(req.body, ['email','password']);
+    var user = new User(body);
+    user.save().then(() => {
+        return user.generateAuthToken();
+    })
+    .then((token) => {
+        res.header('x-auth', token).send(user);
+    })
+    .catch((e) => {
+        res.status(400).send(e);
+    }); 
 });
 
 app.listen(port, () => {
